@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """verify_doi.py: verify a paper's bibliographic metadata against Crossref.
 
-Part of the `read-paper` skill. Enforces the IRON RULE "never fabricate a
+Part of the `spark-paper` skill. Enforces the IRON RULE "never fabricate a
 citation field": before a note's Citation block is written, the DOI or title is
 resolved against Crossref (the open scholarly-metadata registry) so that
 authors, year, venue, and the canonical DOI come from an authority rather than
@@ -28,8 +28,8 @@ API = "https://api.crossref.org/works"
 def _get(url):
     """GET a Crossref URL and return parsed JSON, identifying politely."""
     mailto = os.environ.get("CROSSREF_MAILTO", "").strip()
-    ua = "read-paper-skill/1.0 (https://www.crossref.org/; mailto:%s)" % mailto \
-        if mailto else "read-paper-skill/1.0 (https://www.crossref.org/)"
+    ua = "spark-paper-skill/1.0 (https://www.crossref.org/; mailto:%s)" % mailto \
+        if mailto else "spark-paper-skill/1.0 (https://www.crossref.org/)"
     req = urllib.request.Request(url, headers={"User-Agent": ua})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return json.load(resp)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """lint_frontmatter.py: check a note's YAML frontmatter for required fields.
 
-Part of the `read-paper` skill. A durable note is only useful on later lookback
+Part of the `spark-paper` skill. A durable note is only useful on later lookback
 if its frontmatter is complete and its `status` is honest. This is a
 lightweight, dependency-free check (no PyYAML) intended to run after a note is
 written.

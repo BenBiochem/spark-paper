@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""extract_text.py: robust, dependency-free text extraction for `read-paper`.
+"""extract_text.py: robust, dependency-free text extraction for `spark-paper`.
 
 The skill must ingest "raw PDFs or Word or anything" without depending on a
 system `pandoc` install. This extracts text from the common office and text
@@ -201,7 +201,7 @@ def extract(path):
     if ext == ".pdf":
         text = from_pdf(path)
         if text is None:
-            sys.exit("PDF: no pdftotext found. In the read-paper skill, read "
+            sys.exit("PDF: no pdftotext found. In the spark-paper skill, read "
                      "PDFs directly with the Read tool (native PDF support). "
                      "Or install poppler-utils for a CLI text dump.")
         return text

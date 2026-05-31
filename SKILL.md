@@ -1,7 +1,8 @@
 ---
-name: read-paper
+name: spark-paper
 description: >
-  Depth-on-one-paper companion: prepare to read it, read it with guidance,
+  SparkNotes for academic papers. A depth-on-one-paper companion: prepare to
+  read it, read it with guidance,
   annotate it into a durable note, and cross-check those notes against the
   source with a draft-blind verifier. Four modes: PREP (a pre-read brief that
   orients without spoiling), READ (guided section by section), ANNOTATE (a
@@ -23,7 +24,7 @@ description: >
   hyperresearch), or a simple factual lookup.
 ---
 
-# Read-Paper
+# Spark-Paper
 
 A focused companion for going deep on **one paper**: prepare to read it, read it
 with guidance, turn it into a durable note, and make the note trustworthy by
@@ -80,8 +81,8 @@ contents anywhere.
 
 Outputs are `.md` files. Resolve the target **without blocking the first run**:
 
-1. **Project config.** Look for a `CONVENTIONS (read-paper)` block in the
-   project's `CLAUDE.md`, or a `.read-paper.yml` at the project root. If present,
+1. **Project config.** Look for a `CONVENTIONS (spark-paper)` block in the
+   project's `CLAUDE.md`, or a `.spark-paper.yml` at the project root. If present,
    use it. Fields: `annotations_dir`, `raw_dir`, `index_file`, `naming`
    (default `Author Year -- Short Title.md`), `frontmatter`, `status_values`,
    `wikilinks`.

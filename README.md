@@ -1,6 +1,6 @@
-# read-paper
+# spark-paper
 
-A Claude Code skill for reading one paper closely: get ready to read it, read it with guidance, write a durable note, and check that note back against the source.
+SparkNotes for academic papers. spark-paper helps you understand a paper instead of skimming a summary of it: get ready to read it, read it with guidance, write a durable note, and check that note back against the source.
 
 It follows one rule: orient, don't pre-digest. The skill builds the map and the vocabulary and reads alongside you, but it leaves the verdict to you. Choosing what counts as a key finding is itself a reading call, so the brief offers its ranking as an aid, not a ruling.
 
@@ -22,13 +22,13 @@ Three sibling skills cover different needs:
 
 | Want | Use |
 |------|-----|
-| Depth on one paper | read-paper (this) |
+| Depth on one paper | spark-paper (this) |
 | A verdict on a claim or design | research-council |
 | Breadth across many sources | hyperresearch |
 
 Next to public paper tools:
 
-| Tool type | What it does | What read-paper does instead |
+| Tool type | What it does | What spark-paper does instead |
 |-----------|--------------|------------------------------|
 | Summarizers (Scholarcy) | hand you the conclusion | get you ready to read it yourself |
 | Explainers (Explainpaper, SciSpace) | explain a passage | explain, then falsity-check the analogy |
@@ -61,16 +61,16 @@ A full note has: Citation, Core claim, Key findings, Methods (a short version an
 
 ## Install
 
-Copy `read-paper/` into `~/.claude/skills/`, or into a project's `.claude/skills/`. The core has no dependencies. The Python helpers use only the standard library, so Word, ODT, PPTX, HTML, and text extraction work out of the box, and PDFs (with their figures) are read natively by the host. `convert_docx.sh` is an optional higher-fidelity path that needs `pandoc`.
+Copy `spark-paper/` into `~/.claude/skills/`, or into a project's `.claude/skills/`. The core has no dependencies. The Python helpers use only the standard library, so Word, ODT, PPTX, HTML, and text extraction work out of the box, and PDFs (with their figures) are read natively by the host. `convert_docx.sh` is an optional higher-fidelity path that needs `pandoc`.
 
 Inputs: PDF and figures read natively; Word, ODT, PPTX, HTML, and text via `extract_text.py`; DOIs verified through Crossref; arXiv and URL metadata, with full text opt-in.
 
 ## Where notes land
 
-Nothing is hard-coded. The skill reads a `CONVENTIONS (read-paper)` block from your project `CLAUDE.md` (or a `.read-paper.yml`). If there is none, it uses sane defaults and goes ahead, asking only if you object. Example:
+Nothing is hard-coded. The skill reads a `CONVENTIONS (spark-paper)` block from your project `CLAUDE.md` (or a `.spark-paper.yml`). If there is none, it uses sane defaults and goes ahead, asking only if you object. Example:
 
 ```yaml
-# CONVENTIONS (read-paper)
+# CONVENTIONS (spark-paper)
 annotations_dir: references/annotations
 index_file: references/References.md
 naming: "Author Year -- Short Title.md"
@@ -80,7 +80,7 @@ wikilinks: true
 ## Files
 
 ```
-read-paper/
+spark-paper/
   SKILL.md            modes, conventions, persistence
   reading-method.md   the reading passes, the draft-blind cross-check, methods labels, rules
   templates.md        prep brief, annotation (full and short), curriculum, index entry
