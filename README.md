@@ -1,5 +1,5 @@
 # spark-paper
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/8f6e28cf-3709-4d40-a257-ac00a73a9224" />
+<img width="1024" height="1535" alt="Study smart with Spark-Paper" src="https://github.com/user-attachments/assets/e913b824-c210-4970-9ddf-7f7bb9332ecf" />
 
 SparkNotes for academic papers, with a twist. A normal summary reads the paper for you so you can skip it. spark-paper does the opposite: it helps you read and understand the paper yourself.
 
