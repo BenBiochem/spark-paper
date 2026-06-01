@@ -47,6 +47,9 @@ Next to public paper tools:
 | ANNOTATE | "annotate / write a note / summarize into a note" | a durable note (short or full) plus a draft-blind check |
 | CURRICULUM | explicit only | a learning hub for a set of papers |
 
+<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/9998611b-6832-446c-bf72-2e7e1afcd4e4" />
+
+
 The concept-aid runs across all of them. Ask it to analogize or explain a hard idea and it returns the mapping, where it holds, where it breaks, and the net, then checks that against the source.
 
 ## The two checks
