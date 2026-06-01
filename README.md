@@ -1,9 +1,11 @@
 # spark-paper
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/8f6e28cf-3709-4d40-a257-ac00a73a9224" />
 
-SparkNotes for academic papers. Spark-paper helps you understand a paper instead of skimming a summary of it: get ready to read it, read it with guidance, write a durable note, and check that note back against the source.
+SparkNotes for academic papers, with a twist. A normal summary reads the paper for you so you can skip it. spark-paper does the opposite: it helps you read and understand the paper yourself.
 
-It follows one rule: orient, don't pre-digest. The skill builds the map, the vocabulary, and reads alongside you, but it leaves the verdict to you. Choosing what counts as a key finding is itself a reading call, so the brief offers its ranking as an aid, not a ruling.
+It works in four steps: it gets you ready to read, goes through the paper with you, writes clear notes you can keep, and then checks those notes back against the paper so nothing is wrong or made up.
+
+Think of it as a study partner for dense papers, not a shortcut around them.
 
 ## Quick start
 
