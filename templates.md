@@ -1,11 +1,6 @@
-# Artifact templates
+# Templates
 
-The exact `.md` shapes the skill writes. All are **neutral**: placeholders, no
-domain content. Replace the angle-bracket fields; drop sections that don't apply.
-Internal links use `[[wikilinks]]` or standard markdown per the resolved
-CONVENTIONS.
-
----
+Fixed shapes for every output. Replace angle-bracket fields; omit a section only where noted. Links follow the resolved config (markdown by default, wikilinks if configured).
 
 ## Frontmatter (all notes)
 
@@ -16,146 +11,75 @@ date: <YYYY-MM-DD>
 tags: [paper, <topic>]
 authors: <Last F, Last F, ...>
 year: <YYYY>
-doi: <https://doi.org/...  or  [unverified]>
-venue: <journal / conference>
+doi: <https://doi.org/... or [unverified]>
+venue: <journal or conference>
 status: <to-read | summary | read>
+zotero: <zotero://select/library/items/KEY, when synced>
 ---
 ```
 
-`status` ladder: **to-read** (PREP only), then **summary** (metadata verified,
-short note, no deep read), then **read** (full read plus the draft-blind
-cross-check has run and reconciled).
-
----
-
-## A. Pre-read brief  (PREP, `status: to-read`)
-
-> Orient, don't spoil. No conclusions, no verdict.
+## A. Pre-read brief (PREP)
 
 ```markdown
 # Pre-read: <Author Year -- Short Title>
 
-> [!info] Brief, not a summary. This gets you to the starting line; the verdict
-> is yours to form while reading. Any ranking below is a reading aid, not a
-> ruling on the work.
+> Brief, not a summary. Any ranking below is a reading aid, not a ruling on the work.
 
-## The 5 C's (pass 1)
-- **Category:** <method / discovery / theory / benchmark / review>
-- **Context:** <prior work it sits against; lineage>
-- **Correctness to check:** <assumptions to keep an eye on while reading, not yet judged>
-- **Contributions claimed:** <what it says is new>
-- **Clarity:** <how hard a read; where it will be dense>
+## 5 C's
+- **Category:** <method | discovery | theory | benchmark | review>
+- **Context:** <prior work and lineage>
+- **Correctness to check:** <assumptions to watch while reading; not yet judged>
+- **Contributions claimed:** <what the paper says is new>
+- **Clarity:** <how hard a read; where it is dense>
 
-## The central question
-<the one problem the paper sets out to answer, in a sentence>
+## Central question
+<one sentence>
 
-## Prerequisites and jargon (pre-taught)
-| Term / concept | What you need to know going in |
-|----------------|--------------------------------|
-| <term> | <plain, verified explanation; link a concept-aid if dense> |
-
-## Where it sits
-<neighbours and what to read alongside; links to related notes you already have>
-
-## Author / lab / venue
-<who, which group, where published; context only>
+## Prerequisites and jargon
+| Term | What to know going in |
+|------|-----------------------|
 
 ## Reading map
 | Section | Read how | Why |
 |---------|----------|-----|
-| Abstract | close | frame the contributions |
-| <Methods> | close | <the spine you'll reconstruct later> |
-| <Results Xn> | close / skim | <...> |
-| <...> | skim | <...> |
 
-**Figures first:** <order to look at figures and tables>
-**Estimated effort:** <skim vs focused read vs deep; scale to your own pace>
+**Figures first:** <order>
 
 ## Questions to hold while reading
-- <open question 1>
-- <open question 2>
+- <question>
 ```
 
----
+## B. Note (ANNOTATE)
 
-## B. Annotation, FULL  (ANNOTATE, `status: read`)
-
-Genericized from a literature-note pattern; the comprehension scaffold is QALMRI.
+Full (`read`) uses every section. Summary tier (`summary`) keeps Citation, Core claim, Key findings (3 to 6), Methods summarized, Key takeaway, Related.
 
 ```markdown
 # <Author et al. Year: Full Title>
 
 > [!note] Provenance
-> <what was verified vs knowledge-based>. Citation Crossref-verified <date>.
-> Blind cross-check: <verifier run, draft hidden; N disagreements; what changed>.
+> Citation Crossref-verified <date>. Blind cross-check: <done, N differences, what changed | not run>.
 
 ## Citation
-- Authors: <full list>
-- Year, Venue, DOI
-- <affiliations, funding, disclosed conflicts, if relevant>
+<authors, year, venue, DOI; affiliations and funding if relevant>
 
 ## Core claim
-<the paper's central claim in 2 to 4 sentences (QALMRI: Question plus Inference); a faithful report of the paper's claim, not the skill's opinion>
+<2 to 4 sentences; the paper's own claim (QALMRI: Question and Inferences)>
 
 ## Key findings
-<bulleted; ordered by the paper's own emphasis (confirmed against the blind verifier)>
-- <finding, with the evidence that supports it (QALMRI: Results)>
+- <finding> (<where>) [<producer label>]
 
 ## Methods, summarized
-<approach in plain terms, key technique(s) and why, inputs to process to outputs, how validated. 30-second read.>
+<approach, key technique and why, inputs to outputs, how validated>
 
 ## Methods, expanded
-<reproduction-grade. Label every item.>
-- Protocol: <step> `[stated]`
-- Parameters: <name = value> `[stated]` / <x> `[inferred]` / <y> `[unspecified]`
-- Tools and versions, datasets (size/source), equations and statistics with definitions
-- Controls, replicates, seeds, splits
-- **Reproducibility gaps:** <what the paper does not specify> `[unspecified]`
+- <item>: <detail> `[stated | inferred | unspecified]` (<where>)
 
 ## Reading guide
-**Read in this order:** <1 ... n, with why>
-**Jargon to know:**
-- **<term>:** <verified definition>; `analogy (checked): valid for A, breaks at B` (optional)
+**Order:** <1 ... n, with why>
+**Jargon:** <term>: <definition> (optional: `analogy (checked): holds for A, breaks at B`)
 
 ## Open questions
-<QALMRI: Alternatives plus the R-to-I gap; phrased as questions, not verdicts>
-- <what else could explain X?>
-- <where does the conclusion outrun the evidence?>
-
-## Relevance   <!-- optional; fill ONLY from supplied context, never auto-opinion -->
-<how it bears on the reader's stated work; omit if no context given>
-
-## Key takeaway
-<one durable sentence>
-
-## Related
-- <links to neighbouring notes>
-```
-
----
-
-## C. Annotation, SUMMARY  (ANNOTATE, `status: summary`)
-
-Short form: metadata verified, no deep read yet (and no blind cross-check yet).
-
-```markdown
-# <Author et al. Year: Title>
-
-> [!note] Provenance
-> Metadata Crossref-verified <date>; interpretive summary pending a full read and
-> the blind cross-check.
-
-## Citation
-<authors, year, venue, DOI>
-
-## Core claim
-<2 to 3 sentences>
-
-## Key findings
-<3 to 6 bullets>
-
-## Methods, summarized
-<30-second version>
+- <question from QALMRI A or the R-to-I gap>
 
 ## Key takeaway
 <one sentence>
@@ -164,11 +88,7 @@ Short form: metadata verified, no deep read yet (and no blind cross-check yet).
 - <links>
 ```
 
----
-
-## D. Curriculum / Learning Hub  (CURRICULUM, explicit request only)
-
-For preparing a reader to enter a *body* of literature.
+## C. Learning hub (CURRICULUM)
 
 ```markdown
 ---
@@ -180,32 +100,84 @@ status: active
 
 # <Topic>: Learning Hub
 
-A self-contained path from "<entry state>" to "<target competence>" in about <N>
-sittings.
+> <the one load-bearing idea>
 
-> [!important] The one sentence to leave with
-> <the single load-bearing idea>
+## Outcomes
+1. <what the reader can do at the end>
 
-## What you'll know at the end
-1. <objective> ...
-
-## The framework to internalize first
-<a table or map that organizes the whole topic>
+## Framework
+<a table or map that organizes the topic>
 
 ## Reading order
 | # | Paper | Goal | Self-check question |
-|---|-------|------|--------------------|
-| 1 | <Author Year> | <what this one establishes> | <a question you should be able to answer> |
-
-Each paper gets its own annotation (template B or C) as you work through it.
+|---|-------|------|---------------------|
 ```
 
----
+## D. Record (one JSON per paper; the single source for note, workbook, and Zotero)
 
-## E. Index entry  (appended to `index_file`, if configured)
+Fields with no source are omitted, never invented.
 
-One line per paper, grouped by theme, with a descriptor:
+```json
+{
+  "id": "Author2020",
+  "short": "Author 2020 Venue",
+  "citation": "Author A, Author B. Title. Venue vol:pages (year).",
+  "doi": "10.xxxx/yyyy",
+  "pmid": "",
+  "type": "research article",
+  "topic": "short topic phrase",
+  "status": "to-read | summary | read",
+  "tags": [],
+  "zotero": {"item_key": "", "pdf_key": ""},
+  "cross_check": {"done": true, "date": "YYYY-MM-DD", "disagreements": 0},
+  "sets_out": "the central question",
+  "summary": "about 1000 characters",
+  "takeaways": "about 1500 characters",
+  "findings": [{"where": "p. 3, Results", "page": 3, "finding": "", "number": "",
+    "producer": "MEASURED BY THE AUTHORS", "figure": "Fig. 2B", "check": "matched"}],
+  "methods": [{"item": "", "detail": "", "label": "stated", "where": "p. 2", "page": 2}],
+  "figures": [{"ref": "Fig. 2", "shows": "", "values": "", "supports": "F1", "page": 3}],
+  "terms": [{"term": "", "definition": "", "where": "", "page": 2, "analogy": "", "breaks": ""}],
+  "discussion": [{"kind": "Question", "point": "", "where": "", "qalmri": "A"}],
+  "crosscheck_log": [{"field": "", "draft": "", "verifier": "", "class": "value mismatch",
+    "resolution": "", "locus": ""}]
+}
+```
+
+| Field | Allowed values (anything else is rejected) |
+|-------|--------------------------------------------|
+| `status` | to-read, summary, read (`read` is written as `summary` unless `cross_check.done`) |
+| `producer` | MEASURED BY THE AUTHORS, REPORTED FROM CITED WORK, AUTHORS' INTERPRETATION, BACKGROUND STATEMENT |
+| `label` | stated, inferred, unspecified |
+| `check` | matched, corrected, added, open |
+| `class` | value mismatch, draft-only, source-only, emphasis mismatch, label mismatch |
+| `kind` | Question, Limitation (stated by the authors), Limitation (evident to a careful reader) |
+| `qalmri` | Q, A, L, M, R, I |
+
+`page` is the PDF page index, so a Where cell can link to that page in the Zotero reader.
+
+## E. Workbook (`scripts/cheatsheet.py`)
+
+One multi-paper `.xlsx`. Re-annotating a paper replaces only its rows; grey-blue header columns (Notes, Answer, Discussion Status) belong to the reader and are kept; the hidden `Key` column ties rows to papers; text is stored as text, never as a formula.
+
+| Sheet | One row per | Holds |
+|-------|-------------|-------|
+| About | legend | Status ladder, labels, live counts |
+| Papers | paper | Citation, DOI, type, topic, status, cross-check, central question, summary, takeaways, Zotero and PDF links, tags |
+| Findings | claim | Where, finding, number, producer, figure, check |
+| Methods | method item | Item, detail, label, where, check |
+| Figures | figure or table | What it shows, values read, which findings it supports |
+| Terms | term | Definition, where, checked analogy and where it breaks |
+| Discussion | question or limitation | Kind, point, QALMRI letter, reader status and answer |
+| CrossCheck | difference | Field, draft, verifier, class, resolution, locus |
+| Lists | value | Vocabularies behind the drop-downs |
+
+## F. Zotero note (`zotero_bridge.py push`)
+
+One child note per paper, tagged `spark-paper`, rendered from the record: provenance, central question, summary, takeaways, key findings with producer labels, reproducibility gaps, open questions. Re-pushing updates it in place. The parent item gets tags `spark-paper` and `sp:status:<status>` (an older status tag is replaced; nothing else is touched) and a linked-file attachment pointing at the workbook.
+
+## G. Index line (`index_file`)
 
 ```markdown
-- [[<path to note>|<Author Year -- Title>]]: <one-line descriptor of the contribution>
+- [<Author Year -- Title>](<path>): <one-line descriptor of the contribution>
 ```

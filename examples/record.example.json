@@ -1,0 +1,104 @@
+{
+	"id": "Example2020",
+	"short": "Example 2020 JExample",
+	"citation": "Example A, Sample B. A synthetic record for testing the cheat-sheet scripts. J Example 1:1-2 (2020).",
+	"doi": "10.1000/example.1",
+	"pmid": "",
+	"type": "research article",
+	"topic": "Synthetic example (not a real paper)",
+	"status": "read",
+	"zotero": {
+		"item_key": "",
+		"pdf_key": ""
+	},
+	"tags": [
+		"test",
+		"synthetic"
+	],
+	"cross_check": {
+		"done": true,
+		"date": "2026-10-11",
+		"disagreements": 1
+	},
+	"sets_out": "To test the builder.",
+	"summary": "A synthetic summary.",
+	"takeaways": "A synthetic takeaway.",
+	"findings": [
+		{
+			"where": "p. 3, Results",
+			"page": 3,
+			"finding": "Treated samples differed from controls in the primary readout.",
+			"number": "n = 12",
+			"producer": "MEASURED BY THE AUTHORS",
+			"figure": "Fig. 2B",
+			"check": "matched"
+		},
+		{
+			"where": "p. 1, Intro",
+			"page": 1,
+			"finding": "Earlier work found an effect.",
+			"producer": "REPORTED FROM CITED WORK"
+		},
+		{
+			"where": "Discussion",
+			"finding": "The authors argue the effect is general.",
+			"producer": "AUTHORS' INTERPRETATION"
+		}
+	],
+	"methods": [
+		{
+			"item": "Sample size",
+			"detail": "n = 12 per group",
+			"label": "stated",
+			"where": "p. 2",
+			"page": 2
+		},
+		{
+			"item": "Random seed",
+			"detail": "not reported",
+			"label": "unspecified"
+		}
+	],
+	"figures": [
+		{
+			"ref": "Fig. 2",
+			"shows": "Dose response",
+			"values": "EC50 ~ 3 uM (read from axis)",
+			"supports": "F1",
+			"page": 3
+		}
+	],
+	"terms": [
+		{
+			"term": "Zeta",
+			"definition": "A made-up term.",
+			"where": "p. 2",
+			"page": 2,
+			"analogy": "like a dial",
+			"breaks": "a dial is continuous"
+		}
+	],
+	"discussion": [
+		{
+			"kind": "Question",
+			"point": "Is the effect general?",
+			"where": "p. 5",
+			"qalmri": "A"
+		},
+		{
+			"kind": "Limitation (evident to a careful reader)",
+			"point": "Small n.",
+			"qalmri": "I"
+		}
+	],
+	"crosscheck_log": [
+		{
+			"field": "n",
+			"draft": "10",
+			"verifier": "12",
+			"class": "value mismatch",
+			"resolution": "corrected to 12",
+			"locus": "p. 2"
+		}
+	]
+}

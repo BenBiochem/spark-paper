@@ -16,6 +16,8 @@ Point it at a paper (PDF, Word, or a DOI), then say one of these:
 | prep me for this paper | a pre-read brief: the 5 C's, the central question, the jargon, a reading map. No spoilers. |
 | read this paper with me | a guided pass, section by section, with the figures and methods explained. |
 | annotate this paper | a durable note (short or full), then a draft-blind check against the source. |
+| make a cheat sheet for this paper | the same paper as rows in an Excel workbook: findings, methods, figures, terms, open questions. |
+| put this in Zotero | a note and a status tag on the paper's Zotero item, linked to the workbook. |
 | analogize [a hard idea] | an analogy with its limits marked, plus a best-effort falsity-check. |
 | build a reading curriculum for [topic] | a learning hub across several papers (on request). |
 
@@ -61,13 +63,19 @@ The concept-aid runs across all of them. Ask it to analogize or explain a hard i
 
 Why the verifier works blind: a model re-reading its own draft tends to confirm its own confident mistakes. A verifier that never sees the draft has errors independent of it, so agreement is real evidence and a difference is a real flag.
 
+## Cheat sheet and Zotero
+
+Annotating a paper can also add it to one Excel workbook that grows as you read: a Papers index plus sheets for Findings, Methods, Figures, Terms, Discussion, and the cross-check log. Each finding is labeled by who produced it: measured by the authors, cited from other work, the authors' interpretation, or background. Re-annotating a paper updates its rows and leaves your own notes columns alone.
+
+If you use Zotero, the skill can find the paper in your library, read its PDF, and add a note, a status tag, and a link to the workbook. It only adds; it never edits or deletes anything else, and it talks to Zotero on your own machine only. To allow writes, turn on "Allow other applications on this computer to communicate with Zotero" in Zotero's Advanced settings, then run `python3 scripts/zotero_bridge.py auth` once and choose "Always Allow" in Zotero. Reading works without this step.
+
 ## What a note looks like
 
 A full note has: Citation, Core claim, Key findings, Methods (a short version and a reproduction-grade version, with each detail in the long one marked `[stated]`, `[inferred]`, or `[unspecified]`), a Reading guide, Open questions, Key takeaway, and Related links, plus a provenance line that logs the cross-check. The short tier drops the expanded methods and the cross-check until you do a full read.
 
 ## Install
 
-Copy `spark-paper/` into `~/.claude/skills/`, or into a project's `.claude/skills/`. The core has no dependencies. The Python helpers use only the standard library, so Word, ODT, PPTX, HTML, and text extraction work out of the box, and PDFs (with their figures) are read natively by the host. `convert_docx.sh` is an optional higher-fidelity path that needs `pandoc`.
+Copy `spark-paper/` into `~/.claude/skills/`, or into a project's `.claude/skills/`. The core has no dependencies. The Python helpers use only the standard library (the workbook script also needs `openpyxl`), so Word, ODT, PPTX, HTML, and text extraction work out of the box, and PDFs (with their figures) are read natively by the host. `convert_docx.sh` is an optional higher-fidelity path that needs `pandoc`.
 
 Inputs: PDF and figures read natively; Word, ODT, PPTX, HTML, and text via `extract_text.py`; DOIs verified through Crossref; arXiv and URL metadata, with full text opt-in.
 
@@ -81,16 +89,20 @@ annotations_dir: references/annotations
 index_file: references/References.md
 naming: "Author Year -- Short Title.md"
 wikilinks: true
+workbook: references/Paper_Reading_Notes.xlsx
+zotero: auto            # or off
 ```
 
 ## Files
 
 ```
 spark-paper/
-  SKILL.md            modes, conventions, persistence
-  reading-method.md   the reading passes, the draft-blind cross-check, methods labels, rules
-  templates.md        prep brief, annotation (full and short), curriculum, index entry
-  scripts/            verify_doi.py, extract_text.py, convert_docx.sh, lint_frontmatter.py
+  SKILL.md            pipeline, modes, self-check, rules
+  reading-method.md   reading passes, labels, agents, the draft-blind cross-check
+  templates.md        prep brief, note, curriculum, record, workbook, Zotero note
+  scripts/            verify_doi.py, extract_text.py, convert_docx.sh, lint_frontmatter.py,
+                      cheatsheet.py (workbook), zotero_bridge.py (Zotero)
+  examples/           record.example.json
 ```
 
 ## Glossary
