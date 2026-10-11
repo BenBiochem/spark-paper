@@ -87,7 +87,9 @@ A full note has: Citation, Core claim, Key findings, Methods (a short version an
 /plugin install spark-paper --marketplace BenBiochem/spark-paper
 ```
 
-On an older version, use two steps: `/plugin marketplace add BenBiochem/spark-paper`, then `/plugin install spark-paper@spark-paper`.
+**On claude.ai (web):** go to Customize > Plugins > Add > Add marketplace > Add from a repository, enter `BenBiochem/spark-paper`, choose Sync, then add the plugin from the list. There is nothing to download.
+
+On an older version of Claude Code, use two steps: `/plugin marketplace add BenBiochem/spark-paper`, then `/plugin install spark-paper@spark-paper`.
 
 **By hand:** copy the skill folder into your skills directory (or a project's `.claude/skills/`):
 
@@ -101,7 +103,7 @@ Inputs: PDF and figures read natively; Word, ODT, PPTX, HTML, and text via `extr
 
 ## Other places it runs
 
-It is built for Claude Code, where everything works. On other Claude surfaces or agents, attach one PDF or several to the conversation and it works through them one at a time, as far as the host can read PDFs and run scripts. Without sub-agents the cross-check falls back to a self-consistency pass and the note stays at `summary`. Without access to your machine, the Zotero steps are skipped.
+It is built for Claude Code, where everything works. On other Claude surfaces or agents, attach one PDF or several to the conversation and it works through them one at a time, as far as the host can read PDFs and run scripts. Without sub-agents the cross-check falls back to a self-consistency pass and the note stays at `summary`. Without access to your machine, the Zotero steps are skipped, and a DOI or an attached PDF is the source instead. On claude.ai the session workspace is temporary: download the note and workbook when it finishes, and attach the workbook next time to keep adding rows to it.
 
 ## Where notes land
 
