@@ -67,7 +67,7 @@ Section readers: merge by concatenating, then dedupe on `where` plus meaning. Ag
 ## 4. Blind cross-check (gates `read`)
 
 1. Draft the note and the record.
-2. Run the Verifier (section 3) on the source alone.
+2. Run the Verifier (section 3) on the source alone. Limit its extraction to the chosen sections (it always returns the citation and core claim), which also makes the check cheaper.
 3. Diff its JSON against the record. Classify each difference: *value mismatch*, *draft-only* (possible fabrication), *source-only* (gap), *emphasis mismatch*, *label mismatch* (method label or producer label).
 4. Reconcile at the source: correct the draft, or keep it and cite the locus. Log each difference in `crosscheck_log` (field, draft, verifier, class, resolution, locus).
 5. Set `cross_check` (done, date, disagreements). `read` is allowed only now.

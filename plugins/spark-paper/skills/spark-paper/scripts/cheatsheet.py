@@ -84,6 +84,7 @@ CLASSES = [
 	"label mismatch",
 ]
 DISCUSSION_STATUS = ["open", "resolved", "parked"]
+SECTIONS = ["findings", "methods", "figures", "terms", "discussion", "crosscheck"]
 PAPER_TYPES = [
 	"research article", "review", "editorial", "method", "benchmark",
 	"theory", "preprint", "protocol", "other",
@@ -289,7 +290,13 @@ def validate_record(rec):
 	if status == "read" and not cc.get("done"):
 		warnings.append(
 			"status 'read' without cross_check.done: will be written as 'summary'")
-	if status in ("summary", "read") and not (rec.get("findings") or []):
+	sections = rec.get("sections")
+	if sections is not None:
+		bad = [x for x in sections if x not in SECTIONS]
+		if bad:
+			errors.append("sections %s not in %s" % (bad, SECTIONS))
+	wants_findings = sections is None or "findings" in sections
+	if wants_findings and status in ("summary", "read") and not (rec.get("findings") or []):
 		warnings.append("status %r but no findings" % status)
 	if cc.get("done") and not clean(cc.get("date")):
 		warnings.append("cross_check.done without a date")
@@ -661,11 +668,14 @@ def _lists_sheet(wb):
 		c.font = Font(name=BODY_FONT, size=BODY_SIZE, bold=True, color="FFFFFF")
 		c.fill = PatternFill("solid", fgColor=TEAL)
 	ws.sheet_properties.tabColor = "9AA5AE"
+	ws.sheet_state = "hidden"  # a drop-down source, not something to read
 	return refs
 
 
-def _about_sheet(wb, data):
-	"""Legend, status ladder, and live counts (formulas recalc on open)."""
+def _about_sheet(wb, data, present):
+	"""Legend, status ladder, and live counts (formulas recalc on open).
+
+	`present` lists the sheets that exist, so no count points at a missing sheet."""
 	ws = wb.active
 	ws.title = "About"
 	title = Font(name=BODY_FONT, size=14, bold=True, color=TEAL)
@@ -687,8 +697,11 @@ def _about_sheet(wb, data):
 		("Reader columns", "Grey-blue headers (Notes, Answer, Discussion Status) belong to the reader and "
 			"are kept when a paper is re-annotated. Edits elsewhere persist too, except for the rows of "
 			"the paper being re-annotated, which are regenerated.", None),
-		("Hidden Key column", "Findings, Methods, Figures, Terms, Discussion and CrossCheck keep a hidden "
-			"Key column that ties a row to its paper. Do not edit or delete it.", None),
+		("Hidden Key column", "Each detail sheet keeps a hidden Key column that ties a row to its paper. "
+			"Do not edit or delete it.", None),
+		("Hidden Lists sheet", "A hidden Lists sheet holds the allowed values behind the drop-down menus "
+			"(status, who produced it, method labels, and so on). It needs no attention.", None),
+		("Sheets", "Only the sections that were chosen exist. Papers is always present.", None),
 		("Links", "DOI opens the publisher record. Open in Zotero and Open PDF use zotero:// links; a "
 			"Where link that has a page number opens the PDF at that page in the Zotero reader.", None),
 		("", None, None),
@@ -728,15 +741,18 @@ def _about_sheet(wb, data):
 	counts = [("Papers", "=COUNTA(%s)" % rng("Papers", "ID"))]
 	for s in STATUSES:
 		counts.append(("  " + s, '=COUNTIF(%s,"%s")' % (rng("Papers", "Status"), s)))
-	counts.append(("Findings", "=COUNTA(%s)" % rng("Findings", "Finding")))
-	for p in PRODUCERS:
-		counts.append(("  " + p.lower(), '=COUNTIF(%s,"%s")' % (rng("Findings", "Who produced it"), p)))
-	counts += [
-		("Method items", "=COUNTA(%s)" % rng("Methods", "Detail")),
-		("  unspecified (gaps)", '=COUNTIF(%s,"unspecified")' % rng("Methods", "Label")),
-		("Open questions", '=COUNTIF(%s,"open")' % rng("Discussion", "Status")),
-		("Last updated", datetime.date.today().isoformat()),
-	]
+	if "Findings" in present:
+		counts.append(("Findings", "=COUNTA(%s)" % rng("Findings", "Finding")))
+		for p in PRODUCERS:
+			counts.append(("  " + p.lower(),
+				'=COUNTIF(%s,"%s")' % (rng("Findings", "Who produced it"), p)))
+	if "Methods" in present:
+		counts.append(("Method items", "=COUNTA(%s)" % rng("Methods", "Detail")))
+		counts.append(("  unspecified (gaps)",
+			'=COUNTIF(%s,"unspecified")' % rng("Methods", "Label")))
+	if "Discussion" in present:
+		counts.append(("Open questions", '=COUNTIF(%s,"open")' % rng("Discussion", "Status")))
+	counts.append(("Last updated", datetime.date.today().isoformat()))
 	for left, formula in counts:
 		ws.cell(r, 1, left).font = body
 		c = ws.cell(r, 2, formula)
@@ -751,27 +767,33 @@ def write_workbook(path, data, force=False):
 	number_papers(data)
 	order_rows(data)
 	wb = Workbook()
-	_about_sheet(wb, data)
+	present = [name for name, _ in SHEETS if data[name] or name == "Papers"]
+	_about_sheet(wb, data, present)
 	sheets_ws = {}
 	clipped = []
 	for name, cols in SHEETS:
-		sheets_ws[name] = _write_sheet(wb, name, cols, data[name], clipped)
+		if name in present:
+			sheets_ws[name] = _write_sheet(wb, name, cols, data[name], clipped)
 	refs = _lists_sheet(wb)
 
-	# Drop-downs.
-	n = {name: len(data[name]) for name, _ in SHEETS}
-	_add_validation(sheets_ws["Papers"], SHEET_COLS["Papers"], "Status", refs["Status"], n["Papers"])
-	_add_validation(sheets_ws["Papers"], SHEET_COLS["Papers"], "Type", refs["Type"], n["Papers"])
-	prod = _add_validation(sheets_ws["Findings"], SHEET_COLS["Findings"], "Who produced it",
-		refs["Who produced it"], n["Findings"])
-	_add_validation(sheets_ws["Findings"], SHEET_COLS["Findings"], "Check", refs["Check"], n["Findings"])
-	lab = _add_validation(sheets_ws["Methods"], SHEET_COLS["Methods"], "Label", refs["Label"], n["Methods"])
-	_add_validation(sheets_ws["Methods"], SHEET_COLS["Methods"], "Check", refs["Check"], n["Methods"])
-	_add_validation(sheets_ws["Discussion"], SHEET_COLS["Discussion"], "Kind", refs["Kind"], n["Discussion"])
-	_add_validation(sheets_ws["Discussion"], SHEET_COLS["Discussion"], "QALMRI", refs["QALMRI"], n["Discussion"])
-	dstat = _add_validation(sheets_ws["Discussion"], SHEET_COLS["Discussion"], "Status",
-		refs["Discussion status"], n["Discussion"])
-	cls = _add_validation(sheets_ws["CrossCheck"], SHEET_COLS["CrossCheck"], "Class", refs["Class"], n["CrossCheck"])
+	def dropdown(sheet, header, key):
+		"""Drop-down on `sheet`.`header` from Lists; returns the column letter, or None
+		when that section was not chosen and the sheet does not exist."""
+		if sheet not in sheets_ws:
+			return None
+		return _add_validation(sheets_ws[sheet], SHEET_COLS[sheet], header, refs[key],
+			len(data[sheet]))
+
+	dropdown("Papers", "Status", "Status")
+	dropdown("Papers", "Type", "Type")
+	prod = dropdown("Findings", "Who produced it", "Who produced it")
+	dropdown("Findings", "Check", "Check")
+	lab = dropdown("Methods", "Label", "Label")
+	dropdown("Methods", "Check", "Check")
+	dropdown("Discussion", "Kind", "Kind")
+	dropdown("Discussion", "QALMRI", "QALMRI")
+	dstat = dropdown("Discussion", "Status", "Discussion status")
+	cls = dropdown("CrossCheck", "Class", "Class")
 
 	# Colour cues: how much weight a row can bear, at a glance.
 	if prod:

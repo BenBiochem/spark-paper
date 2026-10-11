@@ -49,9 +49,9 @@ zotero: <zotero://select/library/items/KEY, when synced>
 - <question>
 ```
 
-## B. Note (ANNOTATE)
+## B. Note (ANNOTATE, optional)
 
-Full (`read`) uses every section. Summary tier (`summary`) keeps Citation, Core claim, Key findings (3 to 6), Methods summarized, Key takeaway, Related.
+Written only when the Markdown note is chosen (Full preset or Custom). The workbook carries the same content in sheets. Full (`read`) uses every section. Summary tier (`summary`) keeps Citation, Core claim, Key findings (3 to 6), Methods summarized, Key takeaway, Related.
 
 ```markdown
 # <Author et al. Year: Full Title>
@@ -128,6 +128,7 @@ Fields with no source are omitted, never invented.
   "topic": "short topic phrase",
   "status": "to-read | summary | read",
   "tags": [],
+  "sections": ["findings", "methods"],
   "zotero": {"item_key": "", "pdf_key": ""},
   "cross_check": {"done": true, "date": "YYYY-MM-DD", "disagreements": 0},
   "sets_out": "the central question",
@@ -154,11 +155,11 @@ Fields with no source are omitted, never invented.
 | `kind` | Question, Limitation (stated by the authors), Limitation (evident to a careful reader) |
 | `qalmri` | Q, A, L, M, R, I |
 
-`page` is the PDF page index, so a Where cell can link to that page in the Zotero reader.
+`sections` is optional: the sheets the reader chose (`findings`, `methods`, `figures`, `terms`, `discussion`, `crosscheck`). Omit a section's list instead of leaving it empty; with `sections` set, a missing list is not flagged. `page` is the PDF page index, so a Where cell can link to that page in the Zotero reader.
 
 ## E. Workbook (`scripts/cheatsheet.py`)
 
-One multi-paper `.xlsx`. Re-annotating a paper replaces only its rows; grey-blue header columns (Notes, Answer, Discussion Status) belong to the reader and are kept; the hidden `Key` column ties rows to papers; text is stored as text, never as a formula.
+One multi-paper `.xlsx`. Only the chosen sheets exist (Papers always does); a later paper that adds a section adds its sheet. Re-annotating a paper replaces only its rows; grey-blue header columns (Notes, Answer, Discussion Status) belong to the reader and are kept; the hidden `Key` column ties rows to papers; text is stored as text, never as a formula.
 
 | Sheet | One row per | Holds |
 |-------|-------------|-------|
@@ -170,7 +171,7 @@ One multi-paper `.xlsx`. Re-annotating a paper replaces only its rows; grey-blue
 | Terms | term | Definition, where, checked analogy and where it breaks |
 | Discussion | question or limitation | Kind, point, QALMRI letter, reader status and answer |
 | CrossCheck | difference | Field, draft, verifier, class, resolution, locus |
-| Lists | value | Vocabularies behind the drop-downs |
+| Lists (hidden) | value | Vocabularies behind the drop-downs; no need to open it |
 
 ## F. Zotero note (`zotero_bridge.py push`)
 

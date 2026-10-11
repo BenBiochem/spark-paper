@@ -37,7 +37,7 @@ The concept-aid runs across all of them. Ask it to analogize or explain a hard i
 
 ## The 5 C's
 
-PREP uses Keshav's five questions for a first skim of any paper. They set up the read without judging the paper.
+PREP uses Keshav's five questions for a first skim of any paper. They set up the read without judging the paper. They belong to the pre-read brief; the workbook does not repeat them.
 
 | C | What it asks |
 |---|--------------|
@@ -60,6 +60,19 @@ Why the verifier works blind: a model re-reading its own draft tends to confirm 
 
 Annotating a paper can also add it to one Excel workbook that grows as you read: a Papers index plus sheets for Findings, Methods, Figures, Terms, Discussion, and the cross-check log. Each finding is labeled by who produced it: measured by the authors, cited from other work, the authors' interpretation, or background. Re-annotating a paper updates its rows and leaves your own notes columns alone.
 
+## Choose what you get
+
+Annotating a paper can produce a lot, so the skill asks once which sections you want:
+
+| Preset | What it includes |
+|--------|------------------|
+| Quick | The Papers row and Findings |
+| Standard (default) | Quick, plus Methods, Discussion, and the Zotero note |
+| Full | Standard, plus Figures, Terms, the cross-check log, and a Markdown note |
+| Custom | Any mix of those |
+
+Only the sheets you choose are created. The cross-check still runs either way. To skip the question, set `sections: standard` (or `quick`, `full`) in your config.
+
 ## Zotero
 
 Zotero works in both directions, and reading from it comes first.
@@ -77,7 +90,7 @@ Setup:
 
 ## What a note looks like
 
-A full note has: Citation, Core claim, Key findings, Methods (a short version and a reproduction-grade version, with each detail in the long one marked `[stated]`, `[inferred]`, or `[unspecified]`), a Reading guide, Open questions, Key takeaway, and Related links, plus a provenance line that logs the cross-check. The short tier drops the expanded methods and the cross-check until you do a full read.
+The Markdown note is optional; the workbook covers the same ground. When you ask for it, a full note has: Citation, Core claim, Key findings, Methods (a short version and a reproduction-grade version, with each detail in the long one marked `[stated]`, `[inferred]`, or `[unspecified]`), a Reading guide, Open questions, Key takeaway, and Related links, plus a provenance line that logs the cross-check. The short tier drops the expanded methods and the cross-check until you do a full read.
 
 ## Install
 
@@ -117,6 +130,7 @@ naming: "Author Year -- Short Title.md"
 wikilinks: true
 workbook: references/Paper_Reading_Notes.xlsx
 zotero: auto            # or off
+sections: ask           # or quick, standard, full
 ```
 
 ## Files
