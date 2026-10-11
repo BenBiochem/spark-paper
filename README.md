@@ -73,7 +73,7 @@ Everything stays on your own machine; the skill talks to Zotero locally.
 Setup:
 
 1. To read: in Zotero, turn on "Allow other applications on this computer to communicate with Zotero" (Advanced settings). That is all that is needed to search and read.
-2. To write (optional): run `python3 scripts/zotero_bridge.py auth` once and choose "Always Allow" in the Zotero window.
+2. To write (optional): ask Claude to set up Zotero write access. It runs `zotero_bridge.py auth` once; choose "Always Allow" in the Zotero window.
 
 ## What a note looks like
 
@@ -81,9 +81,27 @@ A full note has: Citation, Core claim, Key findings, Methods (a short version an
 
 ## Install
 
-Copy `spark-paper/` into `~/.claude/skills/`, or into a project's `.claude/skills/`. The core has no dependencies. The Python helpers use only the standard library (the workbook script also needs `openpyxl`), so Word, ODT, PPTX, HTML, and text extraction work out of the box, and PDFs (with their figures) are read natively by the host. `convert_docx.sh` is an optional higher-fidelity path that needs `pandoc`.
+**As a plugin** (Claude Code 2.1.275 or later):
+
+```
+/plugin install spark-paper --marketplace BenBiochem/spark-paper
+```
+
+On an older version, use two steps: `/plugin marketplace add BenBiochem/spark-paper`, then `/plugin install spark-paper@spark-paper`.
+
+**By hand:** copy the skill folder into your skills directory (or a project's `.claude/skills/`):
+
+```bash
+cp -r plugins/spark-paper/skills/spark-paper ~/.claude/skills/
+```
+
+The core has no dependencies. The Python helpers use only the standard library (the workbook script also needs `openpyxl`), so Word, ODT, PPTX, HTML, and text extraction work out of the box, and PDFs (with their figures) are read natively by the host. `convert_docx.sh` is an optional higher-fidelity path that needs `pandoc`.
 
 Inputs: PDF and figures read natively; Word, ODT, PPTX, HTML, and text via `extract_text.py`; DOIs verified through Crossref; arXiv and URL metadata, with full text opt-in.
+
+## Other places it runs
+
+It is built for Claude Code, where everything works. On other Claude surfaces or agents, attach one PDF or several to the conversation and it works through them one at a time, as far as the host can read PDFs and run scripts. Without sub-agents the cross-check falls back to a self-consistency pass and the note stays at `summary`. Without access to your machine, the Zotero steps are skipped.
 
 ## Where notes land
 
@@ -102,13 +120,16 @@ zotero: auto            # or off
 ## Files
 
 ```
-spark-paper/
-  SKILL.md            pipeline, modes, self-check, rules
-  reading-method.md   reading passes, labels, agents, the draft-blind cross-check
-  templates.md        prep brief, note, curriculum, record, workbook, Zotero note
-  scripts/            verify_doi.py, extract_text.py, convert_docx.sh, lint_frontmatter.py,
-                      cheatsheet.py (workbook), zotero_bridge.py (Zotero)
-  examples/           record.example.json
+.claude-plugin/marketplace.json
+plugins/spark-paper/
+  .claude-plugin/plugin.json
+  skills/spark-paper/
+    SKILL.md            pipeline, modes, self-check, rules
+    reading-method.md   reading passes, labels, agents, the draft-blind cross-check
+    templates.md        prep brief, note, curriculum, record, workbook, Zotero note
+    scripts/            verify_doi.py, extract_text.py, convert_docx.sh, lint_frontmatter.py,
+                        cheatsheet.py (workbook), zotero_bridge.py (Zotero)
+    examples/           record.example.json
 ```
 
 ## Glossary

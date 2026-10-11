@@ -1,0 +1,18 @@
+{
+  "name": "spark-paper",
+  "version": "2026.10.11",
+  "description": "Depth on one academic paper. PREP: a pre-read brief. READ: a guided read. ANNOTATE: a durable note, cheat-sheet workbook rows, and a Zotero note, cross-checked against the source by a draft-blind verifier.",
+  "author": {
+    "name": "Benjamin E. Peterson"
+  },
+  "license": "MIT",
+  "keywords": [
+    "papers",
+    "reading",
+    "literature",
+    "notes",
+    "zotero",
+    "cheat-sheet",
+    "research"
+  ]
+}

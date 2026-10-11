@@ -1,0 +1,15 @@
+{
+  "name": "spark-paper",
+  "description": "spark-paper: depth on one academic paper.",
+  "owner": {
+    "name": "Benjamin E. Peterson"
+  },
+  "plugins": [
+    {
+      "name": "spark-paper",
+      "source": "./plugins/spark-paper",
+      "description": "Depth on one academic paper: pre-read brief, guided read, and a cross-checked note with cheat-sheet workbook rows and optional Zotero sync.",
+      "category": "research"
+    }
+  ]
+}

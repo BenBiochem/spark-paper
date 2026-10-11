@@ -9,7 +9,7 @@ description: >
   paper", "write a literature note", "make reading notes", "summarize this paper
   into a note", "make a cheat sheet for this paper", "add this to the reading
   spreadsheet", "find it in Zotero", "read it from my Zotero", "put this in
-  Zotero", "explain this concept from the paper". Not
+  Zotero", "set up Zotero access", "explain this concept from the paper". Not
   for critiquing a claim, deciding what to pursue, or surveying many sources.
 ---
 
@@ -31,6 +31,8 @@ Method, labels, agents, and the cross-check procedure: `reading-method.md`. Outp
 | 3. Draft | Fill the mode's template (`templates.md`). |
 | 4. Check | Run the self-check (below). |
 | 5. Emit | Write the outputs, then print the report line. |
+
+**Other hosts.** A PDF attached to the conversation counts as a given file; several PDFs are annotated one at a time into the same workbook. If the host cannot run scripts or spawn a sub-agent, skip the script step or use the self-consistency fallback (status stays `summary`) and say which was skipped. With no project folder, write outputs where the host provides and hand the files back.
 
 **Config.** Look for a `CONVENTIONS (spark-paper)` block in the project `CLAUDE.md`, or `.spark-paper.yml`. Defaults apply for anything missing:
 
