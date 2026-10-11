@@ -21,25 +21,6 @@ Point it at a paper (PDF, Word, or a DOI), then say one of these:
 | analogize [a hard idea] | an analogy with its limits marked, plus a best-effort falsity-check. |
 | build a reading curriculum for [topic] | a learning hub across several papers (on request). |
 
-## Where it sits
-
-Three sibling skills cover different needs:
-
-| Want | Use |
-|------|-----|
-| Depth on one paper | spark-paper (this) |
-| A verdict on a claim or design | research-council |
-| Breadth across many sources | hyperresearch |
-
-Next to public paper tools:
-
-| Tool type | What it does | What spark-paper does instead |
-|-----------|--------------|------------------------------|
-| Summarizers (Scholarcy) | hand you the conclusion | get you ready to read it yourself |
-| Explainers (Explainpaper, SciSpace) | explain a passage | explain, then falsity-check the analogy |
-| RAG-QA (PaperQA2) | answer questions over a corpus | audit its own note against the source |
-| Guided readers (InsightGUIDE) | take a position | stay neutral |
-
 ## Modes
 
 | Mode | Trigger | Output |
