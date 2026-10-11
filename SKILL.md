@@ -8,7 +8,8 @@ description: >
   paper", "read this paper with me", "walk me through this paper", "annotate this
   paper", "write a literature note", "make reading notes", "summarize this paper
   into a note", "make a cheat sheet for this paper", "add this to the reading
-  spreadsheet", "put this in Zotero", "explain this concept from the paper". Not
+  spreadsheet", "find it in Zotero", "read it from my Zotero", "put this in
+  Zotero", "explain this concept from the paper". Not
   for critiquing a claim, deciding what to pursue, or surveying many sources.
 ---
 
@@ -26,7 +27,7 @@ Method, labels, agents, and the cross-check procedure: `reading-method.md`. Outp
 | Stage | What happens |
 |-------|--------------|
 | 1. Resolve | Read config (below). Never block on it; announce the target in one line. |
-| 2. Source | Identify the paper and read it. PDF and figures: natively with the Read tool (`pages` for long PDFs); text extraction is a search aid, never the read. Word/ODT/PPTX/HTML/txt: `scripts/extract_text.py`. In Zotero: `scripts/zotero_bridge.py find`, then `pdf <key>`. Metadata: `scripts/verify_doi.py` (Crossref); anything unverifiable is `[unverified]`. |
+| 2. Source | Identify the paper and read it. **Zotero is the first place to look** whenever a paper is named without a file and `zotero` is not `off`: `scripts/zotero_bridge.py source "<what was said>"` takes a DOI, item key, title, author and year, or a few words, and returns matches with a local PDF path and a highlight count. One match: read it. Several: ask which. None: say so, then fall back to a file or DOI; never add a paper to Zotero just to read it. Read the PDF and figures natively with the Read tool (`pages` for long PDFs), from the Zotero path or a given path; text extraction is a search aid, never the read. If the reader has highlights (`zotero_bridge.py annotations <key>`), treat them as pointers to what they found notable, not as findings. Word/ODT/PPTX/HTML/txt: `scripts/extract_text.py`. Metadata: `scripts/verify_doi.py` (Crossref); anything unverifiable is `[unverified]`. |
 | 3. Draft | Fill the mode's template (`templates.md`). |
 | 4. Check | Run the self-check (below). |
 | 5. Emit | Write the outputs, then print the report line. |
@@ -75,7 +76,7 @@ The concept-aid (`reading-method.md` section 5) runs inside any mode on request.
 ## Report line (fixed format, last thing printed)
 
 ```
-spark-paper | <short> | status <s> | cross-check <done, N diffs | not run> | note <path> | sheet <+rows | skipped> | zotero <created | updated | unchanged | skipped>
+spark-paper | <short> | source <zotero | file | doi> | status <s> | cross-check <done, N diffs | not run> | note <path> | sheet <+rows | skipped> | zotero <created | updated | unchanged | skipped>
 ```
 
 ## Rules
@@ -84,7 +85,8 @@ spark-paper | <short> | status <s> | cross-check <done, N diffs | not run> | not
 - Claim only what the check delivers: "cross-checked against the source", not "verified".
 - A result the paper only cites is not its finding; label it REPORTED FROM CITED WORK.
 - No bare analogy: ship all four parts (mapping, holds, breaks, net) or none.
-- Zotero is add-only: the skill's own note, two tags (`spark-paper`, `sp:status:<status>`), and a workbook link. Highlights are read-only and not copied unless asked.
+- A paper the user names is looked up in Zotero before asking for a file.
+- Zotero writes are add-only: the skill's own note, two tags (`spark-paper`, `sp:status:<status>`), and a workbook link. Highlights are read-only and not copied unless asked.
 - Never overwrite a workbook an editor has open (the script refuses; do not pass `--force` unprompted).
 - Stay in lane: critique and go/no-go decisions belong to a critique skill, breadth to a research skill.
 - Egress: Crossref metadata only; the Zotero bridge talks to localhost only; a local PDF never leaves the machine; full-text web fetch only if the user supplies the URL or DOI.

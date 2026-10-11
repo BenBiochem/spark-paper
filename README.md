@@ -9,7 +9,7 @@ Think of it as a study partner for dense papers, not a shortcut around them.
 
 ## Quick start
 
-Point it at a paper (PDF, Word, or a DOI), then say one of these:
+Point it at a paper (a PDF, a Word file, a DOI, or just its name if it is in your Zotero library), then say one of these:
 
 | Say | You get |
 |-----|---------|
@@ -48,7 +48,9 @@ Why the verifier works blind: a model re-reading its own draft tends to confirm 
 
 Annotating a paper can also add it to one Excel workbook that grows as you read: a Papers index plus sheets for Findings, Methods, Figures, Terms, Discussion, and the cross-check log. Each finding is labeled by who produced it: measured by the authors, cited from other work, the authors' interpretation, or background. Re-annotating a paper updates its rows and leaves your own notes columns alone.
 
-If you use Zotero, the skill can find the paper in your library, read its PDF, and add a note, a status tag, and a link to the workbook. It only adds; it never edits or deletes anything else, and it talks to Zotero on your own machine only. To allow writes, turn on "Allow other applications on this computer to communicate with Zotero" in Zotero's Advanced settings, then run `python3 scripts/zotero_bridge.py auth` once and choose "Always Allow" in Zotero. Reading works without this step.
+If you use Zotero, it is the first place the skill looks. Name a paper ("annotate the Keshav 2007 paper", a DOI, a few words from the title) and it searches your library, opens the PDF from there, and reads any highlights you made. After annotating it can add a note, a status tag, and a link to the workbook to the same item. It only adds; it never edits or deletes anything else, and it talks to Zotero on your own machine only.
+
+Zotero needs "Allow other applications on this computer to communicate with Zotero" turned on in its Advanced settings. That is enough for searching and reading. To let the skill write the note and tags, run `python3 scripts/zotero_bridge.py auth` once and choose "Always Allow" in Zotero.
 
 ## What a note looks like
 

@@ -8,7 +8,9 @@ anywhere else.
 
 What it does:
 
-	find         look a paper up by DOI, title, item key, tag or collection
+	source       resolve whatever was said about a paper (DOI, key, title, author and
+	             year, a few words) to library items, each with its local PDF path
+	find         lower-level search by DOI, title, item key, tag or collection
 	pdf          print the local path of an item's PDF (so the skill can read it natively)
 	annotations  dump the user's own Zotero Reader highlights and comments on an item
 	add          create a library item from a DOI (metadata from Crossref), deduplicated
@@ -39,6 +41,7 @@ Standard library only. Environment: ZOTERO_PORT (default 23119), ZOTERO_HOST
 Usage:
 	zotero_bridge.py status
 	zotero_bridge.py auth
+	zotero_bridge.py source "Keshav 2007 how to read a paper"   (or a DOI, or an item key)
 	zotero_bridge.py find --doi 10.1000/xyz
 	zotero_bridge.py find --title "some words" | --key ABCD1234 | --tag foo | --collection NAME
 	zotero_bridge.py pdf ABCD1234
@@ -258,6 +261,66 @@ def resolve_collection(client, name_or_key):
 			return d["key"]
 	raise ZoteroError("No Zotero collection named %r. Existing: %s"
 		% (name_or_key, ", ".join(c["data"]["name"] for c in cols) or "(none)"))
+
+
+DOI_RE = re.compile(r"10\.\d{4,9}/[^\s\"<>]+")
+KEY_RE = re.compile(r"^[A-Z0-9]{8}$")
+
+
+def pdf_path(client, att_key):
+	"""Local path of a file attachment, or None when Zotero has no file for it."""
+	try:
+		_, _, raw = client._request("GET", "/api/users/0/items/%s/file/view/url" % att_key)
+	except ZoteroError:
+		return None
+	path = local_path_from_url(raw.decode("utf-8").strip())
+	return path if os.path.exists(path) else None
+
+
+def describe(client, item):
+	"""One match: metadata plus every readable attachment and its local path."""
+	row = summarize(item)
+	data = item.get("data", {})
+	kids = [item] if data.get("itemType") == "attachment" else children(client, row["key"])
+	attachments = []
+	for kid in kids:
+		kd = kid.get("data", {})
+		if kd.get("itemType") != "attachment" or kd.get("linkMode") == "linked_url":
+			continue
+		attachments.append({"key": kid["key"], "contentType": kd.get("contentType"),
+			"title": kd.get("title"), "path": pdf_path(client, kid["key"])})
+	pdf = next((a for a in attachments
+		if a["contentType"] == "application/pdf" and a["path"]), None)
+	row["pdf_key"] = pdf["key"] if pdf else None
+	row["pdf_path"] = pdf["path"] if pdf else None
+	row["attachments"] = attachments
+	row["highlights"] = len(children(client, pdf["key"], itemType="annotation")) if pdf else 0
+	note = next((k["key"] for k in kids if k.get("data", {}).get("itemType") == "note"
+		and NOTE_TAG in [t.get("tag") for t in k["data"].get("tags", [])]), None)
+	row["spark_note_key"] = note
+	return row
+
+
+def locate(client, text, limit=5):
+	"""Resolve free text about a paper to library items, most specific method first:
+	a DOI anywhere in the text, then an 8-character item key, then title/creator/year
+	words, then a search across all fields."""
+	text = text.strip()
+	items, how = [], None
+	doi = DOI_RE.search(text)
+	if doi:
+		items, how = find_items(client, doi=doi.group(0).rstrip(".,;)")), "doi"
+	if not items and KEY_RE.match(text):
+		try:
+			items, how = find_items(client, key=text), "item key"
+		except ZoteroError:
+			items = []
+	if not items:
+		items, how = find_items(client, title=text), "title, creator, year"
+	if not items:
+		items, how = find_items(client, query=text), "all fields"
+	return {"query": text, "matched_by": how if items else None, "count": len(items),
+		"matches": [describe(client, i) for i in items[:limit]]}
 
 
 # --- Crossref -> Zotero item (used by `add`; a sibling script already owns Crossref)
@@ -490,14 +553,19 @@ def cmd_find(client, args):
 	return 0 if out else 1
 
 
+def cmd_source(client, args):
+	result = locate(client, " ".join(args.text))
+	print(json.dumps(result, indent=2))
+	return 0 if result["count"] else 1
+
+
 def cmd_pdf(client, args):
 	att = pdf_attachment(client, args.key)
 	if not att:
 		raise ZoteroError("No local PDF attachment found under %s." % args.key)
-	_, _, raw = client._request("GET", "/api/users/0/items/%s/file/view/url" % att["key"])
-	path = local_path_from_url(raw.decode("utf-8").strip())
-	if not os.path.exists(path):
-		raise ZoteroError("Zotero reports %s but the file is missing on disk." % path)
+	path = pdf_path(client, att["key"])
+	if not path:
+		raise ZoteroError("Zotero has the attachment %s but its file is missing on disk." % att["key"])
 	print(json.dumps({"pdf_key": att["key"], "path": path}))
 	return 0
 
@@ -569,6 +637,9 @@ def main(argv=None):
 	sub = ap.add_subparsers(dest="cmd", required=True)
 	sub.add_parser("status").set_defaults(fn=cmd_status)
 	sub.add_parser("auth").set_defaults(fn=cmd_auth)
+	p = sub.add_parser("source", help="resolve free text about a paper to library items and PDF paths")
+	p.add_argument("text", nargs="+", help="DOI, item key, title, author and year, or a few words")
+	p.set_defaults(fn=cmd_source)
 	p = sub.add_parser("find")
 	p.add_argument("--doi")
 	p.add_argument("--title")
