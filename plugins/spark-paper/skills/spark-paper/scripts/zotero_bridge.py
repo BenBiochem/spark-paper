@@ -416,8 +416,8 @@ def render_note(rec):
 	else:
 		prov += "; draft-blind cross-check not run"
 	parts.append("<p><i>%s. Cross-checked against the source, not a verdict on the science.</i></p>" % prov)
-	for heading, key in (("What it sets out to do", "sets_out"), ("Summary", "summary"),
-			("Main takeaways", "takeaways")):
+	for heading, key in (("What it sets out to do", "sets_out"), ("Reading plan", "reading_plan"),
+			("Summary", "summary"), ("Main takeaways", "takeaways")):
 		if rec.get(key):
 			parts.append("<h2>%s</h2><p>%s</p>" % (heading, esc(rec[key]).replace("\n", "<br/>")))
 	if rec.get("findings"):

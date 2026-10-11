@@ -6,21 +6,13 @@ Reference for the pipeline in SKILL.md: how to read, how to label, who reads, ho
 
 | Pass | Mode | Goal |
 |------|------|------|
-| 1. Skim | PREP | Shape of the paper. The 5 C's: Category, Context, Correctness to check, Contributions claimed, Clarity. |
+| 1. Skim | PREP | Shape of the paper: the central question, what it claims, what to watch for, a reading plan. |
 | 2. Read | READ | Follow the argument with QALMRI. |
 | 3. Reconstruct | ANNOTATE | Could the work be re-derived? Expanded methods, figure values. |
 
-The 5 C's (Keshav's first-pass checklist):
-
-- **Category:** what kind of paper it is: method, discovery, theory, benchmark, or review.
-- **Context:** the prior work it sits against, and its lineage.
-- **Correctness:** the assumptions to check while reading. Listed, not yet judged.
-- **Contributions:** what the paper claims is new.
-- **Clarity:** how well it is written, and where it will be hard going.
-
 QALMRI: Question, Alternatives, Logic, Method, Results, Inferences. Open questions come from A (what else could explain it) and from the gap between R and I. They are phrased as questions, never verdicts.
 
-Sources: Keshav (2007), How to Read a Paper, ACM SIGCOMM CCR 37(3):83-84, doi 10.1145/1273445.1273458. Brosowsky and Parshina (2017), Using the QALMRI Method to Scaffold Reading of Primary Sources.
+Sources: Keshav (2007), How to Read a Paper, ACM SIGCOMM CCR 37(3):83-84, doi 10.1145/1273445.1273458 (the three passes). Brosowsky and Parshina (2017), Using the QALMRI Method to Scaffold Reading of Primary Sources.
 
 ## 2. Labels (every claim carries one)
 
@@ -34,7 +26,7 @@ Sources: Keshav (2007), How to Read a Paper, ACM SIGCOMM CCR 37(3):83-84, doi 10
 | Method item | inferred | Standard practice or derivable, not the paper's word |
 | Method item | unspecified | The paper omits it (a reproducibility gap) |
 
-Status ladder: `to-read` (PREP only), `summary` (metadata verified, short note, no cross-check), `read` (full read plus a completed blind cross-check).
+Status ladder: `to-read` (PREP only), `summary` (metadata verified, short record, no cross-check), `read` (full read plus a completed blind cross-check).
 
 ## 3. Agents (who reads the source)
 
@@ -66,7 +58,7 @@ Section readers: merge by concatenating, then dedupe on `where` plus meaning. Ag
 
 ## 4. Blind cross-check (gates `read`)
 
-1. Draft the note and the record.
+1. Draft the record.
 2. Run the Verifier (section 3) on the source alone. Limit its extraction to the chosen sections (it always returns the citation and core claim), which also makes the check cheaper.
 3. Diff its JSON against the record. Classify each difference: *value mismatch*, *draft-only* (possible fabrication), *source-only* (gap), *emphasis mismatch*, *label mismatch* (method label or producer label).
 4. Reconcile at the source: correct the draft, or keep it and cite the locus. Log each difference in `crosscheck_log` (field, draft, verifier, class, resolution, locus).

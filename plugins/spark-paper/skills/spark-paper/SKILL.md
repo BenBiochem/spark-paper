@@ -1,26 +1,27 @@
 ---
 name: spark-paper
 description: >
-  Depth on one academic paper. PREP: a pre-read brief. READ: a guided read.
-  ANNOTATE: a durable note, cheat-sheet workbook rows (.xlsx), and a Zotero
-  note, cross-checked against the source by a draft-blind verifier. CURRICULUM:
-  a learning hub for a topic (explicit request only). Triggers: "prep me for this
-  paper", "read this paper with me", "walk me through this paper", "annotate this
-  paper", "write a literature note", "make reading notes", "summarize this paper
-  into a note", "make a cheat sheet for this paper", "add this to the reading
+  Depth on one academic paper, kept in one Excel workbook. PREP: pre-read rows
+  (central question, jargon, questions to hold, a reading plan). READ: a guided
+  read. ANNOTATE: findings, methods, figures, terms, and open questions,
+  cross-checked against the source by a draft-blind verifier, with optional
+  Zotero sync. CURRICULUM: a reading order for a topic (explicit request only).
+  Triggers: "prep me for this paper", "read this paper with me", "walk me through
+  this paper", "annotate this paper", "make reading notes", "summarize this
+  paper", "make a cheat sheet for this paper", "add this to the reading
   spreadsheet", "find it in Zotero", "read it from my Zotero", "put this in
-  Zotero", "set up Zotero access", "explain this concept from the paper". Not
-  for critiquing a claim, deciding what to pursue, or surveying many sources.
+  Zotero", "set up Zotero access", "explain this concept from the paper". Not for
+  critiquing a claim, deciding what to pursue, or surveying many sources.
 ---
 
 # spark-paper
 
-Depth on one paper. Two commitments:
+Depth on one paper, kept in one workbook. Two commitments:
 
 - **Orient, do not pre-digest.** Give the map and the vocabulary; leave the verdict to the reader. Choosing "key findings" is itself a reading judgment, so it is presented as an aid.
 - **Trace and cross-check.** Every claim points to a place in the source and is re-derived by a verifier that never saw the draft. The skill reports what the paper says, not whether the paper is right.
 
-Method, labels, agents, and the cross-check procedure: `reading-method.md`. Output formats: `templates.md`.
+The workbook is the pre-read, the starting notes, and the record. The reader owns its Notes sheet; the skill never writes to it. Method, labels, agents, and the cross-check procedure: `reading-method.md`. Formats: `templates.md`.
 
 ## Pipeline (every mode)
 
@@ -28,20 +29,16 @@ Method, labels, agents, and the cross-check procedure: `reading-method.md`. Outp
 |-------|--------------|
 | 1. Resolve | Read config (below) and settle the sections (see Sections). Never block on config; announce the target in one line. |
 | 2. Source | Identify the paper and read it. **Zotero is the first place to look** whenever a paper is named without a file and `zotero` is not `off`: `scripts/zotero_bridge.py source "<what was said>"` takes a DOI, item key, title, author and year, or a few words, and returns matches with a local PDF path and a highlight count. One match: read it. Several: ask which. None: say so, then fall back to a file or DOI; never add a paper to Zotero just to read it. Read the PDF and figures natively with the Read tool (`pages` for long PDFs), from the Zotero path or a given path; text extraction is a search aid, never the read. If the reader has highlights (`zotero_bridge.py annotations <key>`), treat them as pointers to what they found notable, not as findings. Word/ODT/PPTX/HTML/txt: `scripts/extract_text.py`. Metadata: `scripts/verify_doi.py` (Crossref); anything unverifiable is `[unverified]`. |
-| 3. Draft | Fill the mode's template (`templates.md`). |
+| 3. Draft | Build the record (`templates.md` A): one JSON per paper. |
 | 4. Check | Run the self-check (below). |
-| 5. Emit | Write the outputs, then print the report line. |
+| 5. Emit | Write to the workbook (and Zotero if chosen), then print the report line. |
 
-**Other hosts.** A PDF attached to the conversation counts as a given file; several PDFs are annotated one at a time into the same workbook. If the host cannot run scripts or spawn a sub-agent, skip the script step or use the self-consistency fallback (status stays `summary`) and say which was skipped. With no project folder, write outputs where the host provides and hand the files back.
+**Other hosts.** A PDF attached to the conversation counts as a given file; several PDFs are annotated one at a time into the same workbook. If the host cannot run scripts or spawn a sub-agent, skip the script step or use the self-consistency fallback (status stays `summary`) and say which was skipped. With no project folder, write the workbook where the host provides and hand the file back.
 
 **Config.** Look for a `CONVENTIONS (spark-paper)` block in the project `CLAUDE.md`, or `.spark-paper.yml`. Defaults apply for anything missing:
 
 | Key | Default |
 |-----|---------|
-| `annotations_dir` | `./papers/` |
-| `index_file` | `./papers/INDEX.md` |
-| `naming` | `Author Year -- Short Title.md` |
-| `wikilinks` | `false` (standard markdown links) |
 | `workbook` | `./papers/Paper_Reading_Notes.xlsx` |
 | `zotero` | `auto` (or `off`) |
 | `zotero_collection` | none |
@@ -49,12 +46,12 @@ Method, labels, agents, and the cross-check procedure: `reading-method.md`. Outp
 
 ## Modes
 
-| Mode | Trigger | Output | Status |
+| Mode | Trigger | Writes | Status |
 |------|---------|--------|--------|
-| PREP | "prep me", "pre-read", or a paper named with no verb | Brief (template A) and a `to-read` workbook row (central question only) | `to-read` |
-| READ | "read with me", "walk me through" | Guided passes and running notes; no files | none |
-| ANNOTATE | "annotate", "note", "cheat sheet", "summarize into a note" | Note (B), record (D) into the workbook (E) and Zotero (F) | `summary` or `read` |
-| CURRICULUM | explicit only | Learning hub (C) | none |
+| PREP | "prep me", "pre-read", or a paper named with no verb | A `to-read` record: Papers row (central question, topic, reading plan), Terms (jargon), and Discussion questions to hold while reading. No findings. | `to-read` |
+| READ | "read with me", "walk me through" | Nothing: guided passes and running notes in chat | none |
+| ANNOTATE | "annotate", "notes", "cheat sheet", "summarize" | The record for the chosen sections, into the workbook, plus the Zotero note if chosen | `summary` or `read` |
+| CURRICULUM | explicit only | A reading order on the Curriculum sheet (`templates.md` D) | none |
 
 The concept-aid (`reading-method.md` section 5) runs inside any mode on request.
 
@@ -66,19 +63,20 @@ ANNOTATE can produce a lot, so the reader chooses what to include. If the reques
 |--------|----------|
 | Quick | Papers row, Findings |
 | Standard (default) | Quick, plus Methods, Discussion, and the Zotero note |
-| Full | Standard, plus Figures, Terms, CrossCheck, and the Markdown note |
-| Custom | Any mix of the sheets (Findings, Methods, Figures, Terms, Discussion, CrossCheck) and the outputs (Markdown note, Zotero note) |
+| Full | Standard, plus Figures, Terms, and CrossCheck |
+| Custom | Any mix of the sheets (Findings, Methods, Figures, Terms, Discussion, CrossCheck) and the Zotero note |
 
-The Papers row is always written. The choice sets what is drafted, what the verifier extracts, and which sheets exist; the blind cross-check still gates `read`. A section not chosen is left out of the record (list it in `sections`), not written blank. The Markdown note and the sheets draw on the same record, so the note is optional extra reading, not a second source. PREP is unaffected: its brief, including the 5 C's, can be trimmed on request. The 5 C's belong to PREP only; the workbook has no column for them.
+Papers and Notes are always present. The choice sets what is drafted, what the verifier extracts, and which sheets exist; the blind cross-check still gates `read`. A section not chosen is left out of the record (list the chosen ones in `sections`), not written blank. PREP does not ask: it always writes the pre-read rows.
 
 ## ANNOTATE sequence
 
-1. Draft the record (one JSON per paper, `templates.md` D) for the chosen sections, plus the Markdown note if chosen. The workbook rows, the Zotero note, and the Markdown note are all rendered from the same record.
+1. Draft the record for the chosen sections. The workbook rows and the Zotero note are both rendered from it.
 2. Run the blind cross-check with the Verifier agent (`reading-method.md` sections 3 and 4), limited to the chosen sections. `read` only after it completes.
 3. `scripts/cheatsheet.py check record.json`.
 4. Zotero note, if chosen, `zotero` is not `off`, and `zotero_bridge.py status` shows it reachable and writable: `zotero_bridge.py push record.json --workbook <workbook> --write-back`. No write key: say so in one line and continue (`zotero_bridge.py auth` grants it once). Unreachable: skip, say so, continue.
 5. `scripts/cheatsheet.py upsert record.json --workbook <workbook>`.
-6. If the Markdown note is chosen, write it to `annotations_dir` and append one line to `index_file` if configured.
+
+PREP and CURRICULUM run steps 3 and 5 only (`cheatsheet.py curriculum` for a reading order).
 
 ## Self-check (before every emit)
 
@@ -92,7 +90,7 @@ The Papers row is always written. The choice sets what is drafted, what the veri
 ## Report line (fixed format, last thing printed)
 
 ```
-spark-paper | <short> | source <zotero | file | doi> | sections <quick | standard | full | custom> | status <s> | cross-check <done, N diffs | not run> | note <path | none> | sheet <+rows | skipped> | zotero <created | updated | unchanged | skipped>
+spark-paper | <short> | source <zotero | file | doi> | sections <quick | standard | full | custom> | status <s> | cross-check <done, N diffs | not run> | sheet <+rows | skipped> | zotero <created | updated | unchanged | skipped>
 ```
 
 ## Rules
@@ -103,6 +101,6 @@ spark-paper | <short> | source <zotero | file | doi> | sections <quick | standar
 - No bare analogy: ship all four parts (mapping, holds, breaks, net) or none.
 - A paper the user names is looked up in Zotero before asking for a file.
 - Zotero writes are add-only: the skill's own note, two tags (`spark-paper`, `sp:status:<status>`), and a workbook link. Highlights are read-only and not copied unless asked.
-- Never overwrite a workbook an editor has open (the script refuses; do not pass `--force` unprompted).
+- Never write to the Notes sheet. Never overwrite a workbook an editor has open (the script refuses; do not pass `--force` unprompted).
 - Stay in lane: critique and go/no-go decisions belong to a critique skill, breadth to a research skill.
 - Egress: Crossref metadata only; the Zotero bridge talks to localhost only; a local PDF never leaves the machine; full-text web fetch only if the user supplies the URL or DOI.

@@ -8,7 +8,7 @@
     {
       "name": "spark-paper",
       "source": "./plugins/spark-paper",
-      "description": "Depth on one academic paper: pre-read brief, guided read, and a cross-checked note with cheat-sheet workbook rows and optional Zotero sync.",
+      "description": "Depth on one academic paper in one Excel workbook: pre-read, guided read, and cross-checked notes, with optional Zotero sync.",
       "category": "research"
     }
   ]

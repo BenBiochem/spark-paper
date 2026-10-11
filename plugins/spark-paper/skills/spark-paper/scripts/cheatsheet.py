@@ -5,7 +5,8 @@ Part of the `spark-paper` skill. One workbook holds the cheat sheets for many
 papers: a row per paper on `Papers`, and per-paper rows on `Findings`,
 `Methods`, `Figures`, `Terms`, `Discussion`, and `CrossCheck`. The skill
 produces one structured RECORD (JSON) per annotated paper; this script upserts
-that record into the workbook.
+that record into the workbook. The Notes sheet belongs to the reader: this script reads it
+back and writes it out untouched, and never adds to it.
 
 Design rules (each one answers a real failure mode):
 
@@ -32,6 +33,7 @@ Usage:
 	cheatsheet.py new     --workbook PATH
 	cheatsheet.py check   RECORD.json
 	cheatsheet.py upsert  RECORD.json [RECORD2.json ...] --workbook PATH [--force]
+	cheatsheet.py curriculum CURRICULUM.json --workbook PATH
 	cheatsheet.py info    --workbook PATH
 	cheatsheet.py import-legacy OLD.xlsx --workbook NEW.xlsx
 
@@ -84,6 +86,8 @@ CLASSES = [
 	"label mismatch",
 ]
 DISCUSSION_STATUS = ["open", "resolved", "parked"]
+NOTE_KINDS = ["Idea", "Question", "Quote", "To-do", "Connection"]
+CURRICULUM_STATUS = ["to-read", "reading", "done"]
 SECTIONS = ["findings", "methods", "figures", "terms", "discussion", "crosscheck"]
 PAPER_TYPES = [
 	"research article", "review", "editorial", "method", "benchmark",
@@ -124,6 +128,7 @@ SHEETS = [
 		Col("Status", 10),
 		Col("Cross-check", 18),
 		Col("What it sets out to do", 38),
+		Col("Reading plan", 40),
 		Col("Summary", 70),
 		Col("Main takeaways", 90),
 		Col("Zotero", 13, "link"),
@@ -187,6 +192,22 @@ SHEETS = [
 		Col("Answer", 40, user=True),
 		Col("Key", 14, hidden=True),
 	]),
+	("Curriculum", [
+		Col("Topic", 24),
+		Col("Order", 7, "int"),
+		Col("Paper", 44),
+		Col("Goal", 50),
+		Col("Self-check question", 60),
+		Col("Status", 10, user=True),
+		Col("Key", 14, hidden=True),
+	]),
+	("Notes", [
+		Col("Paper", 20, user=True),
+		Col("Date", 11, user=True),
+		Col("Kind", 13, user=True),
+		Col("Note", 100, user=True),
+		Col("Page", 8, user=True),
+	]),
 	("CrossCheck", [
 		Col("#", 5, "int"),
 		Col("Paper", 20),
@@ -200,6 +221,9 @@ SHEETS = [
 	]),
 ]
 SHEET_COLS = dict(SHEETS)
+# Tab order in the workbook: the reader-facing sheets first, the audit trail last.
+SHEET_ORDER = ["Papers", "Notes", "Findings", "Methods", "Figures", "Terms", "Discussion",
+	"CrossCheck", "Curriculum"]
 
 # Older headers still read back correctly (reader columns are never dropped).
 ALIASES = {"My notes": "Notes", "My answer": "Answer"}
@@ -219,6 +243,11 @@ def clean(value):
 	"""Return `value` as a plain string safe to store in a cell."""
 	if value is None:
 		return ""
+	if isinstance(value, datetime.datetime):
+		value = value.date().isoformat() if value.time() == datetime.time(0) \
+			else value.isoformat(sep=" ", timespec="minutes")
+	elif isinstance(value, datetime.date):
+		value = value.isoformat()
 	if isinstance(value, (list, tuple)):
 		value = "; ".join(clean(v) for v in value)
 	return _CTRL.sub("", str(value)).strip()
@@ -412,6 +441,7 @@ def rows_from_record(rec, paper_id, short):
 		"Status": effective_status(rec),
 		"Cross-check": cc_text,
 		"What it sets out to do": clean(rec.get("sets_out")),
+		"Reading plan": clean(rec.get("reading_plan")),
 		"Summary": clean(rec.get("summary")),
 		"Main takeaways": clean(rec.get("takeaways")),
 		"Zotero": ("Open in Zotero" if z.get("item_key") else "",
@@ -519,6 +549,42 @@ def merge_record(data, rec):
 	return paper_id, warnings
 
 
+def validate_curriculum(rec):
+	"""Errors for one curriculum record: {"topic": "...", "papers": [{"paper", "goal", "question"}]}."""
+	errors = []
+	if not isinstance(rec, dict) or not clean(rec.get("topic")):
+		return ["curriculum needs a `topic`"]
+	papers = rec.get("papers") or []
+	if not papers:
+		errors.append("curriculum %r has no `papers`" % rec["topic"])
+	for i, p in enumerate(papers, 1):
+		if not clean(p.get("paper")):
+			errors.append("papers[%d] needs a `paper` (citation or short name)" % i)
+	return errors
+
+
+def merge_curriculum(data, rec):
+	"""Upsert one topic's reading order into data["Curriculum"]; the reader's Status is kept."""
+	errors = validate_curriculum(rec)
+	if errors:
+		raise ValueError("; ".join(errors))
+	topic = clean(rec["topic"])
+	tid = "curriculum:" + short_id(topic)
+	old = {r.get("Key"): r for r in data["Curriculum"] if key_paper(r.get("Key", "")) == tid}
+	data["Curriculum"] = [r for r in data["Curriculum"] if key_paper(r.get("Key", "")) != tid]
+	for i, p in enumerate(rec["papers"], 1):
+		key = row_key(tid, p["paper"])
+		prev = old.get(key)
+		data["Curriculum"].append({
+			"Topic": topic, "Order": p.get("order") if isinstance(p.get("order"), int) else i,
+			"Paper": clean(p["paper"]), "Goal": clean(p.get("goal")),
+			"Self-check question": clean(p.get("question")),
+			"Status": clean(prev.get("Status")) if prev and clean(prev.get("Status")) else "to-read",
+			"Key": key,
+		})
+	return tid
+
+
 def number_papers(data):
 	"""Give every paper a stable number and stamp it on every sheet."""
 	numbers = {}
@@ -544,6 +610,7 @@ def order_rows(data):
 	for name in ("Findings", "Methods", "Figures", "Discussion", "CrossCheck"):
 		data[name].sort(key=lambda r: r.get("#") or 0)
 	data["Terms"].sort(key=lambda r: (clean(r.get("Term")).lower(), clean(r.get("Paper"))))
+	data["Curriculum"].sort(key=lambda r: (clean(r.get("Topic")).lower(), r.get("Order") or 0))
 
 
 # -------------------------------------------------------------------- styling
@@ -654,6 +721,7 @@ def _lists_sheet(wb):
 		("Status", STATUSES), ("Who produced it", PRODUCERS), ("Label", LABELS),
 		("Kind", KINDS), ("QALMRI", QALMRI), ("Check", CHECKS), ("Class", CLASSES),
 		("Discussion status", DISCUSSION_STATUS), ("Type", PAPER_TYPES),
+		("Note kind", NOTE_KINDS), ("Curriculum status", CURRICULUM_STATUS),
 	]
 	refs = {}
 	for ci, (title, values) in enumerate(lists, 1):
@@ -701,7 +769,9 @@ def _about_sheet(wb, data, present):
 			"Do not edit or delete it.", None),
 		("Hidden Lists sheet", "A hidden Lists sheet holds the allowed values behind the drop-down menus "
 			"(status, who produced it, method labels, and so on). It needs no attention.", None),
-		("Sheets", "Only the sections that were chosen exist. Papers is always present.", None),
+		("Sheets", "Only the sections that were chosen exist. Papers and Notes are always present.", None),
+		("Notes sheet", "Free space for the reader: one row per note, with a paper, a date, a kind and a "
+			"page. The skill never writes to it or changes it.", None),
 		("Links", "DOI opens the publisher record. Open in Zotero and Open PDF use zotero:// links; a "
 			"Where link that has a page number opens the PDF at that page in the Zotero reader.", None),
 		("", None, None),
@@ -767,13 +837,13 @@ def write_workbook(path, data, force=False):
 	number_papers(data)
 	order_rows(data)
 	wb = Workbook()
-	present = [name for name, _ in SHEETS if data[name] or name == "Papers"]
+	present = [name for name, _ in SHEETS if data[name] or name in ("Papers", "Notes")]
 	_about_sheet(wb, data, present)
 	sheets_ws = {}
 	clipped = []
-	for name, cols in SHEETS:
+	for name in SHEET_ORDER:
 		if name in present:
-			sheets_ws[name] = _write_sheet(wb, name, cols, data[name], clipped)
+			sheets_ws[name] = _write_sheet(wb, name, SHEET_COLS[name], data[name], clipped)
 	refs = _lists_sheet(wb)
 
 	def dropdown(sheet, header, key):
@@ -794,6 +864,11 @@ def write_workbook(path, data, force=False):
 	dropdown("Discussion", "QALMRI", "QALMRI")
 	dstat = dropdown("Discussion", "Status", "Discussion status")
 	cls = dropdown("CrossCheck", "Class", "Class")
+	dropdown("Notes", "Kind", "Note kind")
+	dropdown("Curriculum", "Status", "Curriculum status")
+	if "Notes" in sheets_ws:  # the Paper cell offers the IDs on Papers; other text is allowed too
+		_add_validation(sheets_ws["Notes"], SHEET_COLS["Notes"], "Paper",
+			"Papers!$B$2:$B$%d" % MAX_ROWS, 0)
 
 	# Colour cues: how much weight a row can bear, at a glance.
 	if prod:
@@ -967,6 +1042,19 @@ def cmd_upsert(args):
 	print("wrote %s (%d papers)" % (args.workbook, len(data["Papers"])))
 
 
+def cmd_curriculum(args):
+	data = read_workbook(args.workbook)
+	for path in args.records:
+		for rec in _load_record(path):
+			try:
+				tid = merge_curriculum(data, rec)
+			except ValueError as exc:
+				sys.exit("curriculum %s rejected: %s" % (path, exc))
+			print("upserted %s" % tid)
+	write_workbook(args.workbook, data, args.force)
+	print("wrote %s" % args.workbook)
+
+
 def cmd_info(args):
 	data = read_workbook(args.workbook)
 	if not data["Papers"]:
@@ -1009,6 +1097,10 @@ def main(argv=None):
 	p.add_argument("records", nargs="+")
 	add_wb(p)
 	p.set_defaults(fn=cmd_upsert)
+	p = sub.add_parser("curriculum", help="add or replace a topic's reading order from JSON")
+	p.add_argument("records", nargs="+")
+	add_wb(p)
+	p.set_defaults(fn=cmd_curriculum)
 	p = sub.add_parser("info", help="list papers and row counts")
 	add_wb(p)
 	p.set_defaults(fn=cmd_info)

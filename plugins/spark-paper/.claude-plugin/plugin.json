@@ -1,7 +1,7 @@
 {
   "name": "spark-paper",
-  "version": "2026.10.11.1",
-  "description": "Depth on one academic paper. PREP: a pre-read brief. READ: a guided read. ANNOTATE: a durable note, cheat-sheet workbook rows, and a Zotero note, cross-checked against the source by a draft-blind verifier.",
+  "version": "2026.10.11.2",
+  "description": "Depth on one academic paper, kept in one Excel workbook. PREP: pre-read rows. READ: a guided read. ANNOTATE: findings, methods, figures, terms, and open questions, cross-checked against the source by a draft-blind verifier, with optional Zotero sync.",
   "author": {
     "name": "Benjamin E. Peterson"
   },
