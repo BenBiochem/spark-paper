@@ -35,6 +35,18 @@ Point it at a paper (a PDF, a Word file, a DOI, or just its name if it is in you
 
 The concept-aid runs across all of them. Ask it to analogize or explain a hard idea and it returns the mapping, where it holds, where it breaks, and the net, then checks that against the source.
 
+## The 5 C's
+
+PREP uses Keshav's five questions for a first skim of any paper. They set up the read without judging the paper.
+
+| C | What it asks |
+|---|--------------|
+| Category | What kind of paper is it: method, discovery, theory, benchmark, or review? |
+| Context | What prior work does it sit against? |
+| Correctness | What assumptions should you check while reading? Listed, not yet judged. |
+| Contributions | What does it claim is new? |
+| Clarity | How well is it written, and where will it be hard going? |
+
 ## The two checks
 
 | Check | How it works | What it claims |
@@ -102,7 +114,7 @@ spark-paper/
 ## Glossary
 
 - Keshav three-pass: a standard way to read a paper (skim, then read, then reconstruct). The first pass uses the 5 C's.
-- The 5 C's: Category (what kind of paper it is: method, discovery, theory, benchmark, review), Context (the prior work it sits against), Correctness (the assumptions to check while reading, not yet judged), Contributions (what it claims is new), Clarity (how well it is written and where it will be hard going).
+- The 5 C's: see [The 5 C's](#the-5-cs) above.
 - QALMRI: a comprehension checklist (Question, Alternatives, Logic, Method, Results, Inferences).
 
 ## Credits
