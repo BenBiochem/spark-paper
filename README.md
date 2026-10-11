@@ -87,9 +87,9 @@ A full note has: Citation, Core claim, Key findings, Methods (a short version an
 /plugin install spark-paper --marketplace BenBiochem/spark-paper
 ```
 
-**On claude.ai (web):** go to Customize > Plugins > Add > Add marketplace > Add from a repository, enter `BenBiochem/spark-paper`, choose Sync, then add the plugin from the list. There is nothing to download.
-
 On an older version of Claude Code, use two steps: `/plugin marketplace add BenBiochem/spark-paper`, then `/plugin install spark-paper@spark-paper`.
+
+**On claude.ai (web):** go to Customize > Plugins > Add > Add marketplace > Add from a repository, enter `BenBiochem/spark-paper`, choose Sync, then add the plugin from the list. There is nothing to download.
 
 **By hand:** copy the skill folder into your skills directory (or a project's `.claude/skills/`):
 
