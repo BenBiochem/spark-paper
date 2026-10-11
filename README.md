@@ -110,10 +110,12 @@ spark-paper/
 - Keshav three-pass: a standard way to read a paper (skim, then read, then reconstruct). The first pass uses the 5 C's: Category, Context, Correctness, Contributions, Clarity.
 - QALMRI: a comprehension checklist (Question, Alternatives, Logic, Method, Results, Inferences).
 
-## Credits and license
+## Credits
 
 - Reading method: Keshav, How to Read a Paper (ACM SIGCOMM CCR, 2007).
 - Comprehension scaffold: Brosowsky and Parshina, Using the QALMRI Method (2017).
 - The blind check follows the work on LLM explanation faithfulness: a model's self-explanation can be plausible but unfaithful, so independence from the draft is what makes the check mean something.
 
-MIT.
+## License
+
+MIT. Copyright (c) 2026 Benjamin E. Peterson. See [LICENSE](LICENSE).
