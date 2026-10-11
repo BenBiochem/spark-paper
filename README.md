@@ -44,13 +44,24 @@ The concept-aid runs across all of them. Ask it to analogize or explain a hard i
 
 Why the verifier works blind: a model re-reading its own draft tends to confirm its own confident mistakes. A verifier that never sees the draft has errors independent of it, so agreement is real evidence and a difference is a real flag.
 
-## Cheat sheet and Zotero
+## Cheat sheet
 
 Annotating a paper can also add it to one Excel workbook that grows as you read: a Papers index plus sheets for Findings, Methods, Figures, Terms, Discussion, and the cross-check log. Each finding is labeled by who produced it: measured by the authors, cited from other work, the authors' interpretation, or background. Re-annotating a paper updates its rows and leaves your own notes columns alone.
 
-If you use Zotero, it is the first place the skill looks. Name a paper ("annotate the Keshav 2007 paper", a DOI, a few words from the title) and it searches your library, opens the PDF from there, and reads any highlights you made. After annotating it can add a note, a status tag, and a link to the workbook to the same item. It only adds; it never edits or deletes anything else, and it talks to Zotero on your own machine only.
+## Zotero
 
-Zotero needs "Allow other applications on this computer to communicate with Zotero" turned on in its Advanced settings. That is enough for searching and reading. To let the skill write the note and tags, run `python3 scripts/zotero_bridge.py auth` once and choose "Always Allow" in Zotero.
+Zotero works in both directions, and reading from it comes first.
+
+**Reads from Zotero.** Name a paper and the skill looks for it in your library before asking for a file. Say "annotate the Keshav 2007 paper", give a DOI, or type a few words from the title. It searches your library, opens the PDF from there, and reads any highlights you made. If several papers match it asks which one; if none match it says so and asks for a file or DOI.
+
+**Writes to Zotero.** After annotating, it can add a note, a status tag, and a link to the workbook to that same item. It only adds. It never edits or deletes anything else in your library, and it never adds a paper just to read it.
+
+Everything stays on your own machine; the skill talks to Zotero locally.
+
+Setup:
+
+1. To read: in Zotero, turn on "Allow other applications on this computer to communicate with Zotero" (Advanced settings). That is all that is needed to search and read.
+2. To write (optional): run `python3 scripts/zotero_bridge.py auth` once and choose "Always Allow" in the Zotero window.
 
 ## What a note looks like
 
