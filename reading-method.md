@@ -10,6 +10,14 @@ Reference for the pipeline in SKILL.md: how to read, how to label, who reads, ho
 | 2. Read | READ | Follow the argument with QALMRI. |
 | 3. Reconstruct | ANNOTATE | Could the work be re-derived? Expanded methods, figure values. |
 
+The 5 C's (Keshav's first-pass checklist):
+
+- **Category:** what kind of paper it is: method, discovery, theory, benchmark, or review.
+- **Context:** the prior work it sits against, and its lineage.
+- **Correctness:** the assumptions to check while reading. Listed, not yet judged.
+- **Contributions:** what the paper claims is new.
+- **Clarity:** how well it is written, and where it will be hard going.
+
 QALMRI: Question, Alternatives, Logic, Method, Results, Inferences. Open questions come from A (what else could explain it) and from the gap between R and I. They are phrased as questions, never verdicts.
 
 Sources: Keshav (2007), How to Read a Paper, ACM SIGCOMM CCR 37(3):83-84, doi 10.1145/1273445.1273458. Brosowsky and Parshina (2017), Using the QALMRI Method to Scaffold Reading of Primary Sources.

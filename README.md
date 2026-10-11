@@ -107,7 +107,8 @@ spark-paper/
 
 ## Glossary
 
-- Keshav three-pass: a standard way to read a paper (skim, then read, then reconstruct). The first pass uses the 5 C's: Category, Context, Correctness, Contributions, Clarity.
+- Keshav three-pass: a standard way to read a paper (skim, then read, then reconstruct). The first pass uses the 5 C's.
+- The 5 C's: Category (what kind of paper it is: method, discovery, theory, benchmark, review), Context (the prior work it sits against), Correctness (the assumptions to check while reading, not yet judged), Contributions (what it claims is new), Clarity (how well it is written and where it will be hard going).
 - QALMRI: a comprehension checklist (Question, Alternatives, Logic, Method, Results, Inferences).
 
 ## Credits
